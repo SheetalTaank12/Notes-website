@@ -1,0 +1,279 @@
+<% layout("layouts/boilerplate") %>
+
+<section id="membership">
+  <a href="/notes" id="homelink"><i class='bx bx-left-arrow-alt'></i>Home</a>
+  <h1 class="membership-heading show-heading">Don't <span style="color:#cc7100"> WAIT</span> More !</h1>
+  <p class="membership-subtext">
+    Start your HSSC preparation today with our free and premium resources—covering notes, practice questions, and mock tests.
+  </p>
+
+  <div class="offer-btns">
+    <a href="/notes/free-pdf"><button class="offer-btn">Browse Free Resources</button></a>
+    <a href="#paid-pdf-btn"><button class="offer-btn">All Subject Notes - Rs 299 Only!</button></a>
+  </div>
+
+  <a href="/notes/policy" class="policylink">Note: Purchases are final and non-refundable. Learn More <i class='bx bx-link-external'></i></a>
+
+
+
+
+  <div class="paid-pdf" id="paid-pdf">
+    <h2 class="paid-heading">Unlock Premium Access</h2>
+
+    <div class="paid-preview">
+      
+      <ul>
+     <li><i class='bx bx-check'></i> Complete History Theory</li>
+     <li><i class='bx bx-check'></i> Complete Geography Notes</li>
+     <li><i class='bx bx-check'></i> Complete Economics Notes</li>
+     <li><i class='bx bx-check'></i> Environment-Ecology Notes</li>
+     <li><i class='bx bx-check'></i> Complete Polity Notes</li>
+     <li><i class='bx bx-check'></i> Haryana GK Notes</li>
+     <li><i class='bx bx-check'></i> Complete Hindi Grammar Notes</li>
+     <li><i class='bx bx-check'></i> English Grammar Notes</li>
+     <li><i class='bx bx-check'></i> Reasoning Problems- Alphabets, Analogy, Blood Relations</li>
+     <li><i class='bx bx-check'></i> Mathematics Solved Problems</li>
+     <li><i class='bx bx-check'></i> Complete Science Notes</li>
+     <li><i class='bx bx-check'></i> Haryana Police Notes</li>
+     <li><i class='bx bx-check'></i> BCM Notes</li>
+     <li><i class='bx bx-check'></i> Complete Computer Notes</li>
+     
+      </ul>
+
+    </div>
+    
+
+    <!-- Collect user email -->
+     <div id="paid-pdf-btn">
+     <label for="userEmail" id="userlabel">Enter Your Email to Purchase Premium Notes :</label>
+    <input type="email" id="userEmail" placeholder="Enter your email" required>
+    <p id="purchaseMessage" style="display:none;"></p>
+    </div>
+   
+    <div class="membership-cards">
+      <div class="membership-card card paid">
+        <h2 class="plan-title" >Get Complete Access to Premium Notes - ALL SUBJECTS! (Hindi medium)</h2>
+        <p class="price">₹299 only</p>
+        <button class="join-btn" onclick="buyNowBundle()">Pay & Get All PDFs</button>
+      </div>
+    </div>
+
+      
+    <div>
+    <p id="alreadypaid">Already Paid ? Find Your Notes Here :</p>
+    <a><button id="fetchPurchasesBtn" class="offer-btn">Show My Purchases</button></a>
+    </div>
+
+    
+    <div class="line"></div>
+    <div id="downloads">
+      
+    </div>
+  </div>
+
+
+
+
+
+  
+  <!-- Paid PDFs -->
+  
+</section>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+
+<script>
+
+document.addEventListener("DOMContentLoaded", () => {
+
+
+const secObserver = new IntersectionObserver((entries,observer)=>{
+    entries.forEach(entry=>{
+        if(entry.isIntersecting){
+            entry.target.classList.add('visible');
+
+            // all headings inside it
+      const headings = entry.target.querySelectorAll('.show-heading');
+      headings.forEach(h => h.classList.add('show'));
+
+        
+        }
+    });
+}, {
+  threshold: 0.05 
+});
+document.querySelectorAll('section').forEach(section=>{
+    secObserver.observe(section);
+});
+
+
+
+});
+
+</script>
+
+
+<script>
+async function buyNowBundle() {
+  const email = document.getElementById("userEmail").value.trim();
+  const msg = document.getElementById("purchaseMessage");
+
+  if (!email) {
+    alert("Please enter your email");
+    return;
+  }
+
+  try {
+    // 1️⃣ Check if user already purchased
+    const checkRes = await fetch("/check-purchase", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+    const checkData = await checkRes.json();
+
+    if (checkData.purchased) {
+      // Already purchased → show message instead of Razorpay
+      msg.textContent = "✅ You have already purchased. Click 'Show My Purchases' to access your PDFs.";
+      msg.style.display = "block";
+      msg.scrollIntoView({ behavior: "smooth" });
+
+      // hide after  seconds
+  setTimeout(() => {
+    msg.style.display = "none";
+  }, 11000);
+
+
+      return; // stop here, do not open Razorpay
+    }
+    
+
+    
+
+
+    // 2️⃣ Otherwise continue with Razorpay order creation
+    const orderRes = await fetch("/create-order", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ amount: 299 * 100 }),
+    });
+    const order = await orderRes.json();
+
+    const options = {
+      key: "<%= RAZORPAY_KEY_ID %>",
+      amount: order.amount,
+      currency: order.currency,
+      order_id: order.id,
+      name: "My Notes Store",
+      description: "Purchase Premium Notes",
+      handler: async function (response) {
+        const verifyRes = await fetch("/verify-payment", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...response, email }),
+        });
+        const data = await verifyRes.json();
+
+        if (data.success) {
+          const downloadsDiv = document.getElementById("downloads");
+          downloadsDiv.innerHTML =
+            "<h3>✅ Payment Success! Download your PDFs:</h3><p><i>Check Links Sent To Your Email For Future Access.</i></p>";
+
+          data.files.forEach((file) => {
+            const card = document.createElement("div");
+            card.className = "membership-card card paid";
+
+            const title = document.createElement("h2");
+            title.className = "plan-title";
+            title.innerText = file.name;
+            card.appendChild(title);
+
+            const btn = document.createElement("button");
+            btn.className = "join-btn";
+            btn.innerText = "Download";
+            btn.onclick = () =>
+  (window.location.href = `/download/paid/${data.purchaseId}/${file.id}`); // use ID in URL
+
+            card.appendChild(btn);
+
+            downloadsDiv.appendChild(card);
+          });
+        } else {
+          alert("❌ Payment verification failed!");
+        }
+      },
+    };
+
+    new Razorpay(options).open();
+  } catch (err) {
+    console.error("Error:", err);
+    alert("Something went wrong!");
+  }
+}
+</script>
+
+<script>
+
+
+async function fetchPurchases() {
+  const email = document.getElementById("userEmail").value;
+  if (!email) return alert("Please enter your email");
+
+  try {
+    const res = await fetch(`/get-purchases?email=${encodeURIComponent(email)}`);
+    const data = await res.json();
+    const downloadsDiv = document.getElementById("downloads");
+    downloadsDiv.innerHTML = "<h3>📂 Your Purchased PDFs:</h3>";
+
+    if (data.purchases && data.purchases.length > 0) {
+      data.purchases.forEach(purchase => {
+        purchase.files.forEach(file => {
+          const card = document.createElement("div");
+          card.className = "membership-card card paid";
+
+          const title = document.createElement("h2");
+          title.className = "plan-title";
+          title.innerText = file.name;
+          card.appendChild(title);
+
+          const btn = document.createElement("button");
+          btn.className = "join-btn";
+          btn.innerText = "Download";
+          btn.onclick = () => window.location.href = `/download/paid/${purchase._id}/${file.id}`; // use ID
+          card.appendChild(btn);
+
+          downloadsDiv.appendChild(card);
+        });
+      });
+    } else {
+      downloadsDiv.innerHTML += "<p>No purchases found for this email.</p>";
+    }
+  } catch (err) {
+    console.error("Error fetching purchases:", err);
+    alert("Failed to fetch purchases. Try again later.");
+  }
+}
+
+// Attach click event
+document.getElementById("fetchPurchasesBtn").addEventListener("click", fetchPurchases);
+
+
+</script>
+
+
+
+
+<script>
+  document.getElementById("fetchPurchasesBtn").addEventListener("click", function () {
+    const email = document.getElementById("userEmail").value.trim();
+
+    if (email) {
+      // If email entered → scroll to downloads
+      document.getElementById("downloads").scrollIntoView({ behavior: "smooth" });
+    } else {
+      // If no email → scroll to email input section
+      document.getElementById("userlabel").scrollIntoView({ behavior: "smooth" });
+    }
+  });
+</script>
