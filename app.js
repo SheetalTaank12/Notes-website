@@ -77,6 +77,27 @@ app.get("/notes/policy", (req, res) => {
 });
 
 
+// Privacy Policy
+app.get("/notes/privacy-policy", (req, res) => {
+  try {
+    res.render("privacy-policy.ejs");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error loading page");
+  }
+});
+
+// Terms & Conditions
+app.get("/notes/terms-and-conditions", (req, res) => {
+  try {
+    res.render("terms-and-conditions.ejs");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error loading page");
+  }
+});
+
+
 app.get("/notes/free-pdf",(req,res)=>{
 
   try { res.render("freepdf.ejs"); }
