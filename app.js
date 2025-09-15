@@ -162,7 +162,7 @@ app.post("/verify-payment", async (req, res) => {
   {id: "1NBF2TJqcx4EvNwtHGeWJP6kRsdO8rhMy", name: "Complete Geography Notes"},  //geo
   {id: "1vYqzaAXxf_ES1_2VUy-ERqvvyIGqKI6y", name: "Complete Economics Notes"}, //eco
   {id: "1Z8GMz3LReFKdnLp1u1O8k0NEmYzgqQv2", name: "Complete BCM Notes"}, //bcm
-  {id: "1g9m9K9kyX4xESOpJDiVT6sOh0NzSZspk", name: "Complete Computer Notes"}, //computer
+  {id: "1VqoRpWxpLcWGJ3ATZsNj8la-Q367pSCP", name: "Complete Computer Notes"}, //computer
   {id: "1d_2Uql_6FfaMb3-C4liUmJjvDDC_FqS5", name: "Hindi Grammar Notes"}, //hindi gr
   {id: "1qZzTujJ4PHX9R7Fh6ziknfjHnV94Wc4w", name: "Complete Polity Notes"}, //polity
   {id: "1KYqtGxjvHpGYh1kLyYaBukParaF8DJlD", name: "Complete Science Notes"}, //science
