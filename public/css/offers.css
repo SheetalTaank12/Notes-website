@@ -278,8 +278,13 @@
   border: 2px solid red;
   color: red;
   border-radius: 1rem;
+  padding: 1rem;
+  width: 90%;
 }
 @media (max-width: 768px){
+  .latenotes{
+    font-size: 0.8rem;
+  }
   .paid-preview ul{
     gap: 0.9rem;
     flex-direction: column;
