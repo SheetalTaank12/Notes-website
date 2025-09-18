@@ -274,6 +274,11 @@
     border-radius: 1rem;
     color: #fff;
 }
+.latenotes{
+  border: 2px solid red;
+  color: red;
+  border-radius: 1rem;
+}
 @media (max-width: 768px){
   .paid-preview ul{
     gap: 0.9rem;
