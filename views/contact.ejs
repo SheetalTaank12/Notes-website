@@ -108,6 +108,16 @@ document.querySelectorAll('section').forEach(section=>{
       });
 
       const result = await response.json();
+//       response.json() is a built-in function that:
+
+// Reads the raw text (like '{"success":true}')
+
+// Runs JSON.parse() on it
+
+// Converts it into a JavaScript object
+
+
+
       if (result.success) {
         alert("✅ Message sent successfully!");
         e.target.reset(); // clear form

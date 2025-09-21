@@ -10,7 +10,7 @@ const dotenv = require("dotenv");
 const nodemailer = require("nodemailer");
 
 const Purchase = require("./models/purchase"); // import Purchase model
-dotenv.config();
+dotenv.config(); //dotenv.config() loads all environment variables from a .env file into process.env
 
 const app = express();
 
@@ -122,7 +122,6 @@ app.post("/create-order", async (req, res) => {
   }
 });
 
-// Step 2: Verify payment & store purchase
 // Step 2: Verify payment & store purchase with email
 app.post("/verify-payment", async (req, res) => {
   try {
@@ -308,6 +307,8 @@ app.post("/check-purchase", async (req, res) => {
 });
 
 
+//wherever res.json is used it is sending data to the frontend where the specific routes are fetched
+
 
 
 
@@ -328,7 +329,7 @@ app.post("/send-message", async (req, res) => {
     // Email content
     const mailOptions = {
       from: email,
-      to: "hssccetnotes@gmail.com", // your receiving email
+      to: "jatinsonihansi21@gmail.com", // your receiving email
       subject: `📩 New Contact Form Message - ${subject || "No subject"}`,
       html: `
         <h3>You got a new inquiry</h3>
