@@ -1,7 +1,7 @@
 // app.js - handles routes + free + paid (with Razorpay) downloads
 const express = require("express");
 const path = require("path");
-const fs = require("fs");
+
 const ejsMate = require("ejs-mate");
 const bodyParser = require("body-parser");
 const Razorpay = require("razorpay");
