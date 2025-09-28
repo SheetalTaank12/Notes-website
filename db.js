@@ -2,20 +2,20 @@
 
 
 
+import mongoose from "mongoose";
 
-if(process.env.NODE_ENV != "production"){
-require('dotenv').config();
+let isConnected = false; // track connection
+
+export async function connectDB() {
+ 
+
+  try {
+    await mongoose.connect(process.env.ATLAS_DB_URL);
+    isConnected = true;
+    console.log("MongoDB connected");
+  } catch (error) {
+    console.error("MongoDB connection error:", error);
+    throw error;
+  }
 }
 
-
-
-
-const mongoose = require("mongoose");
-const dbUrl = process.env.ATLAS_DB_URL;  //now mongo will connect to atlas db which is hosted online, and not to our local db
-
-async function connectDB() {
-  await mongoose.connect(dbUrl);
-  console.log("Connected to DB");
-}
-
-module.exports = connectDB;

@@ -1,6 +1,4 @@
-const mongoose=require ("mongoose");
-
-
+import mongoose from "mongoose";
 
 const purchaseSchema = new mongoose.Schema({
   email: String,
@@ -9,12 +7,15 @@ const purchaseSchema = new mongoose.Schema({
   files: [
     {
       id: String,
-      name: String
-    }
+      name: String,
+    },
   ],
   amount: Number,
-  createdAt: { type: Date, default: Date.now }
+  createdAt: { type: Date, default: Date.now },
 });
-const Purchase = mongoose.model("Purchase", purchaseSchema);
 
-module.exports= Purchase;
+// Prevent model overwrite in dev/ serverless reloads
+const Purchase =
+  mongoose.models.Purchase || mongoose.model("Purchase", purchaseSchema);
+
+export default Purchase;

@@ -198,8 +198,8 @@ const mailOptions = {
   from: process.env.EMAIL_USER,
   to: email,
   subject: "✅ Your Premium Notes Purchase",
-  html: `<h4>Congrats! You got HSSC CET Premium Study Material</h4>
-         <p>Thanks for your purchase of ₹299!</p>
+  html: `<h4>Congrats! You got Premium Study Material</h4>
+         <p>Thanks for your purchase of ₹100!</p>
          <p>Download your notes anytime:</p>
          <ul>
            ${downloadLinks.map(l => `<li><a href="${l.url}">${l.name}</a></li>`).join("")}
@@ -329,7 +329,7 @@ app.post("/send-message", async (req, res) => {
     // Email content
     const mailOptions = {
       from: email,
-      to: "jatinsonihansi21@gmail.com", // your receiving email
+      to: "aumtechsolutionofficial@gmail.com", // your receiving email
       subject: `📩 New Contact Form Message - ${subject || "No subject"}`,
       html: `
         <h3>You got a new inquiry</h3>
